@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
+    <link rel="stylesheet" href="ajax.css">
+
+
+</head>
+
+<body>
+    <div class="title">
+        <h1>AQI 空氣品質指標</h1>
+    </div>
+
+    <div class="row">
+        <div id="level" class="col-sm-12 col-md-12 col-lg-12">
+            <table>
+                <thead>
+                    <tr height=50>
+                        <td>空氣品質指標(AQI)</td>
+                        <td style="background-color: #11db22c4">0~50</td>
+                        <td style="background-color: #FFFF00">51~100</td>
+                        <td style="background-color: #ff8000">101~150</td>
+                        <td style="background-color: #ea0000">151~200</td>
+                        <td style="background-color: #9f4d95; color:white;">201~300</td>
+                        <td style="background-color: #6c3365;color:white;">301~500</td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr height=100 style="font-weight: bold">
+                        <td width="210">對健康影響</td>
+                        <td width="210">良好</td>
+                        <td width="210">普通</td>
+                        <td width="210">對敏感族群不健康</td>
+                        <td width="210">對所有族群不健康</td>
+                        <td width="210">非常不健康</td>
+                        <td width="210">危害</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <hr>
+    <div class="header">
+        <div class="area">
+            <select class="choose">
+            <option value="" >請選擇縣市區域:</option>
+                </select>
+            <div class="areaName">請先選擇區域</div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+    <div class="content">
+        <div class="aside">
+            <div class="aside-name"> </div>
+
+            <ul class="detail">
+
+                <li>
+                    <div>
+                        <p><span>臭氧</span>&nbsp<span style="font-size: 1rem">O3 (ppb)</span>
+                            <div id="o3" class="num"></div>
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <p><span>懸浮微粒</span>&nbsp<span style="font-size: 1rem">PM10 (μg/m³)</span>
+                            <div id="pm10" class="num"></div>
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <p><span>細懸浮微粒</span>&nbsp<span style="font-size: 1rem">PM2.5 (μg/m³)</span>
+                            <div id="pm25" class="num"></div>
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <p><span>一氧化碳</span>&nbsp<span style="font-size: 1rem">CO (ppm)</span>
+                            <div id="co" class="num"></div>
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <p><span>二氧化硫</span>&nbsp<span style="font-size: 1rem">SO2 (ppb)</span>
+                            <div id="so2" class="num"></div>
+                        </p>
+                    </div>
+                </li>
+                <li>
+                    <div>
+                        <p><span>二氧化氮</span>&nbsp<span style="font-size: 1rem">NO2 (ppb)</span>
+                            <div id="no2" class="num"></div>
+                        </p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+
+        <div class="locTitle">
+            <ul class="locations">
+                <li class="locList"></li>
+            </ul>
+        </div>
+    </div>
+
+    <script src="jquery.js"></script>
+    <script>
+        // $.ajax({
+        //     type: "GET",
+        //     url: "https://cors-anywhere.herokuapp.com/opendata.epa.gov.tw/webapi/Data/REWIQA/?$orderby=SiteName&$skip=0&$top=1000&format=json ",
+        //     dataType: "json",
+        //     success: function(a) {
+        //         for (i = 0; i < a.length; i++) {
+        //             var county = a[i].County;
+        //             console.log(county);
+        //         }
+        //     }
+        // });
+        $.ajax({
+            type: "GET",
+            url: "https://cors-anywhere.herokuapp.com/opendata.epa.gov.tw/webapi/Data/REWIQA/?$orderby=SiteName&$skip=0&$top=1000&format=json ",
+            dataType: "json",
+            success: countydata
+        });
+
+        function countydata(a) {
+            var result = [];
+            for (i = 0; i < a.length; i++) {
+                result[i] = a[i].County;
+
+            }
+
+            console.log(result);
+            console.log(typeof(result)); //判斷型別
+
+            //將重複縣市去除
+            var origin = result;
+            var ans = Array.from(new Set(origin));
+            console.log(ans);
+            console.log(typeof(ans));
+
+            //將縣市選項加入select選單
+            $.each(ans, function(i, val) {
+                $(".choose").append($("<option value='" + ans[i] + "'>" + ans[i] + "</option>"));
+            });
+
+            //取select的值
+            $(document).on("change", '.choose', function() {
+                $('.locations').empty();
+                //如果有第二個class就刪除
+                var selection = $(".choose").val();
+                let be_select = a.filter(function(value) {
+                    return value.County === selection
+
+                });
+
+                $(".areaName").text(selection);
+
+                console.log(be_select.map(el => el.SiteName));
+                var locName = be_select.map(el => el.SiteName);
+                var locAqi = be_select.map(el => el.AQI);
+                var blocAqi = "";
+
+                $.each(locName, function(i, val) {
+                    if (locAqi[i] <= 50) {
+                        blocAqi = "background-color:#11db22c4";
+                    } else if (locAqi[i] <= 100) {
+                        blocAqi = "background-color:#FFFF00";
+                    } else if (locAqi[i] <= 150) {
+                        blocAqi = "background-color: #ff8000";
+                    } else if (locAqi[i] <= 200) {
+                        blocAqi = "background-color: #ea0000";
+                    } else if (locAqi[i] <= 300) {
+                        blocAqi = "background-color: #9f4d95";
+                    } else if (locAqi[i] <= 500) {
+                        blocAqi = "background-color: #6c3365";
+                    }
+                    $(".locations").append($("<li class='locList'>" + "<span class='locName'>" + locName[i] + "</span>" + `<span class="locAqi"style='${blocAqi}'>` + locAqi[i] + "</span>" + "</li>"));
+
+                });
+
+                $(".locList").on("click", function() {
+
+                    let curName = $(this).find(".locName").text();
+
+                    console.log(curName);
+                    console.log(be_select);
+
+                    var detail = be_select.filter(function(item, index, array) {
+                        return item.SiteName === curName;
+                    });
+                    console.log(detail);
+
+
+                    $('.aside-name').text(detail[0].SiteName);
+                    $('#o3').text(detail[0].O3);
+                    $('#pm10').text(detail[0].PM10);
+                    $('#pm25').text(detail[0]['PM2.5']);
+                    $('#co').text(detail[0].CO);
+                    $('#so2').text(detail[0].SO2);
+                    $('#no2').text(detail[0].NO2);
+                    // $('.aside-aqi').text(detail[0].AQI);
+
+
+
+                });
+
+
+
+            });
+
+        }
+        // //點選選單後之後更新全部
+        // select.addEventListener('change', function(e) {
+        //     e.preventDefault();
+        //     updateAll(e.target.value);
+        // });
+    </script>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js " integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo " crossorigin="anonymous "></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js " integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut " crossorigin="anonymous "></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js " integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k " crossorigin="anonymous "></script>
+</body>
+
+</html>

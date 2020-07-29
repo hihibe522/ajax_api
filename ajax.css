@@ -1,0 +1,116 @@
+body {
+    /* color: white; */
+    font-family: Microsoft JhengHei;
+    background-color: rgb(65, 66, 66);
+    width: 100%;
+}
+
+h1 {
+    color: white;
+    text-align: center;
+    margin: 2% 0;
+}
+
+table {
+    width: 80%;
+    text-align: center;
+    margin: 2% auto;
+    font-size: 1.2rem;
+}
+
+td,
+tr {
+    background-color: white;
+    border: black solid 2px;
+}
+
+hr {
+    border: 0.1rem dashed white;
+    width: 95%;
+}
+
+.area {
+    color: white;
+    margin-left: 2%;
+    margin: 0 10%;
+}
+
+.choose {
+    padding: 1.1%;
+    width: 30%;
+    float: left;
+    font-size: 1.5rem;
+}
+
+.areaName {
+    font-size: 2.5rem;
+    text-align: center;
+    margin: 0% 50%;
+    width: 30%;
+    color: white;
+    padding: 1%;
+}
+
+.aside {
+    font-size: 1.5rem;
+    width: 25%;
+    margin-left: 10%;
+    padding: 1%;
+    color: white;
+    list-style-type: none;
+    /* background-color: skyblue; */
+    float: left;
+}
+
+.detail {
+    list-style-type: none;
+}
+
+.num {
+    font-size: 2rem;
+    text-align: center;
+    border-bottom: 0.1rem solid white;
+}
+
+.aside-name {
+    font-size: 2rem;
+    text-align: center;
+    margin-left: 15%;
+    margin-bottom: 2%;
+}
+
+.locations {
+    list-style-type: none;
+    color: white;
+    font-size: 2rem;
+    text-align: center;
+    margin: auto;
+    width: 60%;
+    float: left;
+}
+
+.locName {
+    width: 20%;
+    height: 100px;
+    background-color: cadetblue;
+    border: solid white 0.2rem;
+    float: left;
+    margin: 1% 1%;
+    padding-top: 2%;
+}
+
+.locAqi {
+    width: 20%;
+    height: 100px;
+    border: solid white 0.2rem;
+    float: left;
+    margin: 1% 1%;
+    padding-top: 2%;
+}
+
+
+/* @media screen and (min-width: 480px) {
+    body {
+        background-color: lightgreen;
+    }
+} */
